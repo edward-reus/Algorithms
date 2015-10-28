@@ -8,6 +8,6 @@ namespace BTrees
 {
     public interface iVisit
     {
-        void VisitNode(Node n);
+        void VisitNode(Node n, Queue<int> que);
     }
 }

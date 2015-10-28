@@ -8,8 +8,15 @@ namespace BTrees
 {
     public class Visit : iVisit
     {
-        public void VisitNode(Node n)
+        public void VisitNode(Node n, Queue<int> queue)
         {
+            if ((n == null)||(queue == null))
+            {
+                throw new ArgumentNullException();
+            }
+
+            queue.Enqueue(n.iValue);
+            
             return;
         }
     }
