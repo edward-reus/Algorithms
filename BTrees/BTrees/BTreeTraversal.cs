@@ -8,9 +8,23 @@ namespace BTrees
 {
     public class BTreeTraversal: iBTreeTraversal
     {
+        private Visit _visit;
+
+        BTreeTraversal(Visit v)
+        {
+            _visit = v;
+        }
+
         public void InOrder(Node n)
         {
-            return;
+            if (n == null)
+            {
+                return;
+            }
+
+            InOrder(n.left);
+            _visit.VisitNode(n);
+            InOrder(n.right);
         }
     }
 }

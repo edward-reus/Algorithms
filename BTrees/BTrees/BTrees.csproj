@@ -41,6 +41,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BTreeTraversal.cs" />
+    <Compile Include="iVisit.cs" />
+    <Compile Include="Visit.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="iBTreeTraversal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
