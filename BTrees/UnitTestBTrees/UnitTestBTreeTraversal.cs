@@ -10,14 +10,17 @@ namespace UnitTestBTrees
         [TestClass]
         public class UnitTest_Recursive_BTrees
         {
-            private Node BuildSixNodeTree()
+            private Node BuildSevenNodeTree()
             {
-                // Tree that looks like (how to do this with a MOQ?):
+                // Building a 7-node tree. This as a node with only a left child, a node with only a right child, 
+                // and nodes that have both left and right children. Tree that looks like:
                 //     4
                 //    /  \
                 //   3    9
                 //  /    / \
                 // 1    7   11
+                //           \
+                //            15
                 Node n = null;
 
                 Node t = new Node();   // Root node (value == 4).
@@ -34,6 +37,9 @@ namespace UnitTestBTrees
                 n.left.iValue = 7;
                 n.right = new Node();  // Right child of 9 (is 11).
                 n.right.iValue = 11;
+                n = n.right;
+                n.right = new Node();  // Right child of 11 (is 15).
+                n.right.iValue = 15;
 
                 return t;
             }
@@ -47,7 +53,7 @@ namespace UnitTestBTrees
                 BTreeTraversal bt = new BTreeTraversal(v, queue);
 
                 // Act
-                bt.InOrder(null);
+                bt.InOrderTraversal(null);
 
                 //Assert
                 Assert.IsTrue(queue.Count == 0);
@@ -63,27 +69,27 @@ namespace UnitTestBTrees
                 BTreeTraversal bt = new BTreeTraversal(v, queue);
 
                 // Act
-                bt.InOrder(n);
+                bt.InOrderTraversal(n);
 
                 //Assert
                 Assert.IsTrue(queue.Count == 1);
             }
 
             [TestMethod]
-            public void InOrder_Traversal_Handles_Simple_Six_Node_Tree()
+            public void InOrder_Traversal_Handles_Simple_Seven_Node_Tree()
             {
                 // Arrange
-                Node tree = BuildSixNodeTree();
+                Node tree = BuildSevenNodeTree();
                 Visit v = new Visit();
                 Queue<int> queue = new Queue<int>();
                 BTreeTraversal bt = new BTreeTraversal(v, queue);
 
                 // Act
-                bt.InOrder(tree);
+                bt.InOrderTraversal(tree);
 
                 //Assert
-                // There should be six values in the queue:
-                Assert.IsTrue(queue.Count == 6);
+                // There should be seven values (from the seven nodes) in the queue:
+                Assert.IsTrue(queue.Count == 7);
 
                 // Those values should be in assending order:
                 int iPrev = -1;

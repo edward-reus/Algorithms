@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BTrees
+namespace BTree
 {
-    interface iBTreeTraversal
+    public class BTrees
     {
-        void InOrderTraversal(Node n);
     }
 }

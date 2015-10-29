@@ -21,16 +21,16 @@ namespace BTrees
             _que = que;
         }
 
-        public void InOrder(Node n)
+        public void InOrderTraversal(Node n)
         {
             if (n == null)
             {
                 return;
             }
 
-            InOrder(n.left);
+            InOrderTraversal(n.left);
             _visit.VisitNode(n,_que);
-            InOrder(n.right);
+            InOrderTraversal(n.right);
         }
     }
 }
