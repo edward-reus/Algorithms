@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace BTrees
 {
+    // Basic recursive algorithm:
+    // 1. Traverse the left subtree recursively.
+    // 2. If no left child, then visit the (current) node.
+    // 3. Recurse to the right subtree.
     public class BTreeTraversal: iBTreeTraversal
     {
         private Visit _visit;
