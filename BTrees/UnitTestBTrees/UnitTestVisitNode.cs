@@ -6,7 +6,7 @@ using BTrees;
 namespace UnitTestBTrees
 {
     [TestClass]
-    public class UnitTestBTrees
+    public class UnitTestVisitNode
     {
         [TestMethod]
         public void VisitNode_Enqueues_Int()

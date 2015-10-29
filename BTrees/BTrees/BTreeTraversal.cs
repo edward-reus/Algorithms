@@ -11,7 +11,7 @@ namespace BTrees
         private Visit _visit;
         private Queue<int> _que;
 
-        BTreeTraversal(Visit v, Queue<int> que)
+        public BTreeTraversal(Visit v, Queue<int> que)
         {
             _visit = v;
             _que = que;
