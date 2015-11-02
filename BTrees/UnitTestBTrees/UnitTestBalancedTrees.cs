@@ -7,7 +7,7 @@ namespace UnitTestBalacedTrees
     [TestClass]
     public class UnitTestBalancedTrees
     {
-        private Node BuildSevenNodeBalancedTree()
+        private void BuildSevenNodeBalancedTree(BalancedTrees bt)
         {
             // Building a 7-node tree. This as a node with only a left child, a node with only a right child, 
             // and nodes that have both left and right children. Tree that looks like this and has a depth of four:
@@ -18,47 +18,27 @@ namespace UnitTestBalacedTrees
             // 1    7   11
             //           \
             //            15
-            Node n = null;
-
-            Node t = new Node();   // Root node (value == 4).
-            t.iValue = 4;
-            t.left = new Node();   // Left child of root (3).
-            n = t.left;
-            n.iValue = 3;
-            n.left = new Node();   // Left child of 3 (is 1).
-            n.left.iValue = 1;
-            t.right = new Node();  // Right child of root (9).
-            n = t.right;
-            n.iValue = 9;
-            n.left = new Node();   // Left child of 9 (is 7).
-            n.left.iValue = 7;
-            n.right = new Node();  // Right child of 9 (is 11).
-            n.right.iValue = 11;
-            n = n.right;
-            n.right = new Node();  // Right child of 11 (is 15).
-            n.right.iValue = 15;
-
-            return t;
+            bt.Insert(4);
+            bt.Insert(3);
+            bt.Insert(9);
+            bt.Insert(1);
+            bt.Insert(7);
+            bt.Insert(11);
+            bt.Insert(15);
         }
 
-        private Node BuildLeftUnbalancedTree()
+        private void BuildLeftUnbalancedTree(BalancedTrees bt)
         {
-            Node tree = new Node();
-
-            tree.left = new Node();
-            tree.left.left = new Node();
-
-            return tree;
+            bt.Insert(4);
+            bt.Insert(2);
+            bt.Insert(1);
         }
 
-        private Node BuildRightUnbalancedTree()
+        private void BuildRightUnbalancedTree(BalancedTrees bt)
         {
-            Node tree = new Node();
-
-            tree.right = new Node();
-            tree.right.right = new Node();
-
-            return tree;
+            bt.Insert(4);
+            bt.Insert(8);
+            bt.Insert(16);
         }
 
         [TestMethod]
@@ -68,7 +48,7 @@ namespace UnitTestBalacedTrees
             BalancedTrees b = new BalancedTrees();
 
             // Act
-            int depth = b.TreeDepth(null);
+            int depth = b.TreeDepth();
 
             // Assert
             Assert.IsTrue(depth == 0);
@@ -79,10 +59,10 @@ namespace UnitTestBalacedTrees
         {
             // Arrange
             BalancedTrees b = new BalancedTrees();
-            Node tree = new Node();
+            b.Insert(1);
 
             // Act
-            int depth = b.TreeDepth(tree);
+            int depth = b.TreeDepth();
 
             // Assert
             Assert.IsTrue(depth == 1);
@@ -93,10 +73,10 @@ namespace UnitTestBalacedTrees
         {
             // Arrange
             BalancedTrees b = new BalancedTrees();
-            Node tree = BuildSevenNodeBalancedTree();
+            BuildSevenNodeBalancedTree(b);
 
             // Act
-            int depth = b.TreeDepth(tree);
+            int depth = b.TreeDepth();
 
             // Assert
             Assert.IsTrue(depth == 4);
@@ -109,7 +89,7 @@ namespace UnitTestBalacedTrees
             BalancedTrees b = new BalancedTrees();
 
             // Act
-            bool balanced  = b.TreeIsBalanced1(null);
+            bool balanced  = b.TreeIsBalanced1();
 
             // Assert
             Assert.IsTrue(balanced);
@@ -123,7 +103,7 @@ namespace UnitTestBalacedTrees
             Node tree = new Node();
 
             // Act
-            bool balanced = b.TreeIsBalanced1(tree);
+            bool balanced = b.TreeIsBalanced1();
 
             // Assert
             Assert.IsTrue(balanced);
@@ -134,10 +114,10 @@ namespace UnitTestBalacedTrees
         {
             // Arrange
             BalancedTrees b = new BalancedTrees();
-            Node tree = BuildSevenNodeBalancedTree();
+            BuildSevenNodeBalancedTree(b);
 
             // Act
-            bool balanced = b.TreeIsBalanced1(tree);
+            bool balanced = b.TreeIsBalanced1();
 
             // Assert
             Assert.IsTrue(balanced);
@@ -148,10 +128,10 @@ namespace UnitTestBalacedTrees
         {
             // Arrange
             BalancedTrees b = new BalancedTrees();
-            Node tree = BuildLeftUnbalancedTree();
+            BuildLeftUnbalancedTree(b);
 
             // Act
-            bool balanced = b.TreeIsBalanced1(tree);
+            bool balanced = b.TreeIsBalanced1();
 
             // Assert
             Assert.IsFalse(balanced);
@@ -164,7 +144,7 @@ namespace UnitTestBalacedTrees
             BalancedTrees b = new BalancedTrees();
 
             // Act
-            bool balanced = b.TreeIsBalanced2(null);
+            bool balanced = b.TreeIsBalanced2();
 
             // Assert
             Assert.IsTrue(balanced);
@@ -175,10 +155,10 @@ namespace UnitTestBalacedTrees
         {
             // Arrange
             BalancedTrees b = new BalancedTrees();
-            Node tree = new Node();
+            b.Insert(5);
 
             // Act
-            bool balanced = b.TreeIsBalanced2(tree);
+            bool balanced = b.TreeIsBalanced2();
 
             // Assert
             Assert.IsTrue(balanced);
