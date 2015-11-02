@@ -135,10 +135,12 @@ namespace BTrees
             return inserted;
         }
 
-        private bool FindParent(Node n, ref Node parent)
+        private bool FindParent(Node t, Node n, ref Node parent)
         {
             Stack<Node> s = new Stack<Node>();
             s.Push(n);
+
+            // missing code...
 
             parent = null;
             return false;
@@ -147,7 +149,7 @@ namespace BTrees
         public bool Delete(Node n)
         {
             Node parent = null;
-            bool found = FindParent(n, ref parent);
+            bool found = FindParent(this.tree, n, ref parent);
 
             if (found == false)
             {
@@ -188,6 +190,13 @@ namespace BTrees
             // Case #3: The node has both left and right children.
             // Find the largest value in the left subtree, remove it, and 
             // substitute it in with the node being deleted.
+            if (n.left.right == null)
+            {
+                parent.left = n.left;
+                return true;
+            }
+            
+            // Node largest = FindLargestNode()
 
             return true;
         }
