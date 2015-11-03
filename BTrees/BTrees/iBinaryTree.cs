@@ -19,6 +19,8 @@ namespace BTrees
 
         bool Insert(int iValue);
 
+        bool Insert(Node node);
+
         bool Delete(Node node);
     }
 }

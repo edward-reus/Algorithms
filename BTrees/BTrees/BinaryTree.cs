@@ -8,13 +8,13 @@ namespace BTrees
 {
     public class BinaryTree : iBinaryTree
     {
-        private Node tree = null;
+        private Node _tree = null;
 
         // The depth of the tree is the longest chain of nodes in the b-tree.
         // This recursive method adds one for each node "level" to find the depth.
         public int TreeDepth()
         {
-            return TreeDepthInternal(this.tree);
+            return TreeDepthInternal(_tree);
         }
             
         private int TreeDepthInternal(Node t)
@@ -36,7 +36,7 @@ namespace BTrees
         // This one is pretty simple but visits nodes multiple times.
         public bool TreeIsBalanced1()
         {
-            return TreeIsBalancedInternal1(this.tree);
+            return TreeIsBalancedInternal1(_tree);
         }
 
         public bool TreeIsBalancedInternal1(Node t)
@@ -62,7 +62,7 @@ namespace BTrees
         public bool TreeIsBalanced2()
         {
             int depth = 0;
-            return TreeIsBalancedInternal2(this.tree, ref depth);
+            return TreeIsBalancedInternal2(_tree, ref depth);
         }
 
         private bool TreeIsBalancedInternal2(Node t, ref int depth)
@@ -92,13 +92,18 @@ namespace BTrees
         {
             Node n = new Node(iValue);
 
-            if (tree == null)
+            return Insert(n);
+        }
+
+        public bool Insert(Node n)
+        {
+            if (_tree == null)
             {
-                tree = n;     // tree was empty (null), so n is first element.
+                _tree = n;     // tree was empty (null), so n is first element.
                 return true;
             }
 
-            Node current = tree;
+            Node current = _tree;
             Node parent = null;
             bool inserted = false;
 
@@ -135,46 +140,63 @@ namespace BTrees
             return inserted;
         }
 
-        public bool FindNodeAndParent(Node tree, Node n, ref Node parent)
+        public bool FindNodeAndParent(Node t, Node n, ref Node parent)
         {
-            if (tree == null)    // Check for empty tree...
+            if (t == null)    // Check for empty tree.
             {
                 parent = null;
                 return false;
             }
 
-
-            if ((tree.left == null) && (tree.right == null))
+            if (t == n)
             {
-                parent = null;
-                if (tree == n)
-                    return true;   // Single node tree which matches Node n.
-                else
-                    return false;  // Single node tree which do not match Node n.
-            }
-
-            bool found = false;
-
-            parent = tree;
-            if (tree.left != null)
-            {
-                found = FindNodeAndParent(tree.left, n, ref parent);
-            }
-            if (found == true)
                 return true;
-
-            if (tree.right != null)
-            {
-                found = FindNodeAndParent(tree.right, n, ref parent);
             }
-            if (found == true)
-                  return true;
 
+            parent = t;
+
+            bool found;
+
+            if (t.iValue > n.iValue)
+            {
+                if (t.left != null)
+                {
+                    found = FindNodeAndParent(t.left, n, ref parent);
+                    if (found == true)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            if (_tree.right != null)
+            {
+                found = FindNodeAndParent(_tree.right, n, ref parent);
+                if (found == true)
+                {
+                    return true;
+                }
+            }
 
             return false;
         }
 
-        // FindNodeyValue is a pre-order recursive search. In a well balanced tree this is O(log number-of-nodes).
+        // FindLargestNode() searches a binary tree and returns the node with the largest iValue. This will always
+        // be either the node, or a node in its right subtree...
+        private Node FindLargestNode(Node tree)
+        {
+            Node nLargest = null;
+
+            while (tree != null)
+            {
+                nLargest = tree;
+                tree = tree.right;
+            }
+
+            return nLargest;
+        }
+
+        // FindNodeyValue() is a pre-order recursive search. In a well balanced tree this is O(log number-of-nodes).
         private Node FindNodeByValue(Node t, int iVal)
         {
             if (t == null)
@@ -198,13 +220,13 @@ namespace BTrees
 
         public Node FindNode(int iVal)
         {
-            return FindNodeByValue(tree, iVal);
+            return FindNodeByValue(_tree, iVal);
         }
 
         public bool Delete(Node n)
         {
             Node parent = null;
-            bool found = FindNodeAndParent(this.tree, n, ref parent);
+            bool found = FindNodeAndParent(_tree, n, ref parent);
 
             if (found == false)
             {
@@ -212,10 +234,10 @@ namespace BTrees
                 return false;
             }
 
+            // Ok, node was found.
             if (parent == null)
             {
                 // Tree is a single node tree.
-                tree = null;
                 return true;
             }
 
@@ -245,13 +267,18 @@ namespace BTrees
             // Case #3: The node has both left and right children.
             // Find the largest value in the left subtree, remove it, and 
             // substitute it in with the node being deleted.
-            if (n.left.right == null)
+            Node nLargest = FindLargestNode(n.left);
+            this.Delete(nLargest);
+            nLargest.right = n.right;
+            nLargest.left = n.left;
+            if (parent.left == n)
             {
-                parent.left = n.left;
-                return true;
+                parent.left = nLargest;
+            } 
+            else
+            {
+                parent.right = nLargest;
             }
-            
-            // Node largest = FindLargestNode()
 
             return true;
         }
