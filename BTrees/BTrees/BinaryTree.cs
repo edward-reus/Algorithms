@@ -230,7 +230,7 @@ namespace BTrees
             }
             
             // Case #2: Node n has either a left or right child but not both.
-            if ((n.left != null && (n.right == null))
+            if ((n.left != null) && (n.right == null))
             {
                 parent.left = n.left;
                 return true;

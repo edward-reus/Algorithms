@@ -204,5 +204,35 @@ namespace UnitTestBalacedTrees
             // Assert
             Assert.IsNotNull(n);
         }
+
+        [TestMethod]
+        public void Test_Find_Succeeds_When_Walking_Depth_Equals_2_Tree()
+        {
+            // Arrange
+            BinaryTree bt = new BinaryTree();
+            BuildLeftUnbalancedTree(bt);
+            bt.Insert(17);   // Tree (should have a depth of two, new leaf node.
+
+            // Act
+            Node n = bt.FindNode(17);   // Should find the single node (17 == 17)...
+
+            // Assert
+            Assert.IsNotNull(n);
+        }
+
+        [TestMethod]
+        public void Test_Find_Succeeds_When_Walking_Complex_Tree()
+        {
+            // Arrange
+            BinaryTree bt = new BinaryTree();
+            BuildSevenNodeBalancedTree(bt);
+            int iVal = 9;  // Internal Node in tree...
+
+            // Act
+            Node n = bt.FindNode(iVal);   // Should find the single node (17 == 17)...
+
+            // Assert
+            Assert.IsNotNull(n);
+        }
     }
 }
