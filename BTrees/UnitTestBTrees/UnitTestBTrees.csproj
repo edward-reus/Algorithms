@@ -53,7 +53,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="UnitTestBalancedTrees.cs" />
+    <Compile Include="UnitTestBinaryTree.cs" />
     <Compile Include="UnitTestBTreeTraversal.cs" />
     <Compile Include="UnitTestVisitNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

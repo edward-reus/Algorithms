@@ -7,7 +7,7 @@ namespace UnitTestBalacedTrees
     [TestClass]
     public class UnitTestBalancedTrees
     {
-        private void BuildSevenNodeBalancedTree(BalancedTrees bt)
+        private void BuildSevenNodeBalancedTree(BinaryTree bt)
         {
             // Building a 7-node tree. This as a node with only a left child, a node with only a right child, 
             // and nodes that have both left and right children. Tree that looks like this and has a depth of four:
@@ -27,14 +27,14 @@ namespace UnitTestBalacedTrees
             bt.Insert(15);
         }
 
-        private void BuildLeftUnbalancedTree(BalancedTrees bt)
+        private void BuildLeftUnbalancedTree(BinaryTree bt)
         {
             bt.Insert(4);
             bt.Insert(2);
             bt.Insert(1);
         }
 
-        private void BuildRightUnbalancedTree(BalancedTrees bt)
+        private void BuildRightUnbalancedTree(BinaryTree bt)
         {
             bt.Insert(4);
             bt.Insert(8);
@@ -45,7 +45,7 @@ namespace UnitTestBalacedTrees
         public void Test_Tree_Depth_For_Null_Tree()
         {
             // Arrange
-            BalancedTrees b = new BalancedTrees();
+            BinaryTree b = new BinaryTree();
 
             // Act
             int depth = b.TreeDepth();
@@ -58,7 +58,7 @@ namespace UnitTestBalacedTrees
         public void Test_Tree_Depth_For_Single_Node_Tree()
         {
             // Arrange
-            BalancedTrees b = new BalancedTrees();
+            BinaryTree b = new BinaryTree();
             b.Insert(1);
 
             // Act
@@ -72,7 +72,7 @@ namespace UnitTestBalacedTrees
         public void Test_Tree_Depth_For_Seven_Node_Tree()
         {
             // Arrange
-            BalancedTrees b = new BalancedTrees();
+            BinaryTree b = new BinaryTree();
             BuildSevenNodeBalancedTree(b);
 
             // Act
@@ -86,7 +86,7 @@ namespace UnitTestBalacedTrees
         public void Test_TreeIsBalanced1_For_Null_Tree()
         {
             // Arrange
-            BalancedTrees b = new BalancedTrees();
+            BinaryTree b = new BinaryTree();
 
             // Act
             bool balanced  = b.TreeIsBalanced1();
@@ -99,7 +99,7 @@ namespace UnitTestBalacedTrees
         public void Test_TreeIsBalanced1_For_Single_Node_Tree()
         {
             // Arrange
-            BalancedTrees b = new BalancedTrees();
+            BinaryTree b = new BinaryTree();
             Node tree = new Node();
 
             // Act
@@ -113,7 +113,7 @@ namespace UnitTestBalacedTrees
         public void Test_TreeIsBalanced1_Seven_Node_Balanced_Tree()
         {
             // Arrange
-            BalancedTrees b = new BalancedTrees();
+            BinaryTree b = new BinaryTree();
             BuildSevenNodeBalancedTree(b);
 
             // Act
@@ -127,7 +127,7 @@ namespace UnitTestBalacedTrees
         public void Test_TreeIsBalanced1_Left_Unbalanced_Tree()
         {
             // Arrange
-            BalancedTrees b = new BalancedTrees();
+            BinaryTree b = new BinaryTree();
             BuildLeftUnbalancedTree(b);
 
             // Act
@@ -141,7 +141,7 @@ namespace UnitTestBalacedTrees
         public void Test_TreeIsBalanced2_For_Null_Tree()
         {
             // Arrange
-            BalancedTrees b = new BalancedTrees();
+            BinaryTree b = new BinaryTree();
 
             // Act
             bool balanced = b.TreeIsBalanced2();
@@ -154,14 +154,55 @@ namespace UnitTestBalacedTrees
         public void Test_TreeIsBalanced2_For_Single_Node_Tree()
         {
             // Arrange
-            BalancedTrees b = new BalancedTrees();
-            b.Insert(5);
+            BinaryTree bt = new BinaryTree();
+            bt.Insert(5);
 
             // Act
-            bool balanced = b.TreeIsBalanced2();
+            bool balanced = bt.TreeIsBalanced2();
 
             // Assert
             Assert.IsTrue(balanced);
+        }
+
+        [TestMethod]
+        public void Test_Find_For_Empty_Tree()
+        {
+            // Arrange
+            BinaryTree bt = new BinaryTree();
+
+            // Act
+            Node n = bt.FindNode(7);   // Should be no node to find...
+
+            // Assert
+            Assert.IsNull(n);
+        }
+
+        [TestMethod]
+        public void Test_Find_Fails_For_Single_Node_Tree()
+        {
+            // Arrange
+            BinaryTree bt = new BinaryTree();
+            bt.Insert(17);
+
+            // Act
+            Node n = bt.FindNode(7);   // Should be no node to find (7 != 17)...
+
+            // Assert
+            Assert.IsNull(n);
+        }
+
+        [TestMethod]
+        public void Test_Find_Succeeds_For_Single_Node_Tree()
+        {
+            // Arrange
+            BinaryTree bt = new BinaryTree();
+            bt.Insert(17);
+
+            // Act
+            Node n = bt.FindNode(17);   // Should find the single node (17 == 17)...
+
+            // Assert
+            Assert.IsNotNull(n);
         }
     }
 }

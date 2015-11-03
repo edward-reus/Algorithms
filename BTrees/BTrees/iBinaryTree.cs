@@ -7,13 +7,15 @@ using BTrees;
 
 namespace BTrees
 {
-    interface iBalancedTrees
+    interface iBinaryTree
     {
         int TreeDepth();
 
         bool TreeIsBalanced1();
 
         bool TreeIsBalanced2();
+
+        Node FindNode(int iValue);
 
         bool Insert(int iValue);
 

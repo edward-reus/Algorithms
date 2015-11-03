@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BTrees
 {
-    public class BalancedTrees : iBalancedTrees
+    public class BinaryTree : iBinaryTree
     {
         private Node tree = null;
 
@@ -135,21 +135,76 @@ namespace BTrees
             return inserted;
         }
 
-        private bool FindParent(Node t, Node n, ref Node parent)
+        public bool FindNodeAndParent(Node tree, Node n, ref Node parent)
         {
-            Stack<Node> s = new Stack<Node>();
-            s.Push(n);
+            if (tree == null)    // Check for empty tree...
+            {
+                parent = null;
+                return false;
+            }
 
-            // missing code...
 
-            parent = null;
+            if ((tree.left == null) && (tree.right == null))
+            {
+                parent = null;
+                if (tree == n)
+                    return true;   // Single node tree which matches Node n.
+                else
+                    return false;  // Single node tree which do not match Node n.
+            }
+
+            bool found = false;
+
+            parent = tree;
+            if (tree.left != null)
+            {
+                found = FindNodeAndParent(tree.left, n, ref parent);
+            }
+            if (found == true)
+                return true;
+
+            if (tree.right != null)
+            {
+                found = FindNodeAndParent(tree.right, n, ref parent);
+            }
+            if (found == true)
+                  return true;
+
+
             return false;
+        }
+
+        // FindNodeyValue is a pre-order recursive search. In a well balanced tree this is O(log number-of-nodes).
+        private Node FindNodeByValue(Node t, int iVal)
+        {
+            if (t == null)
+            {
+                return null;
+            }
+
+            if (iVal == t.iValue)  // Check for match.
+            {
+                return t;
+            }
+
+            if (iVal < t.iValue)   // Check to see if we need to go look left.
+            {
+                return FindNodeByValue(t.left, iVal);
+            }
+
+            // Only case left is to check the right branch of the tree.
+            return FindNodeByValue(t.right, iVal);
+        }
+
+        public Node FindNode(int iVal)
+        {
+            return FindNodeByValue(tree, iVal);
         }
 
         public bool Delete(Node n)
         {
             Node parent = null;
-            bool found = FindParent(this.tree, n, ref parent);
+            bool found = FindNodeAndParent(this.tree, n, ref parent);
 
             if (found == false)
             {
@@ -174,8 +229,8 @@ namespace BTrees
                 return true;
             }
             
-            // Case #2: Node n has either a left or right child.
-            if (n.left != null)
+            // Case #2: Node n has either a left or right child but not both.
+            if ((n.left != null && (n.right == null))
             {
                 parent.left = n.left;
                 return true;
