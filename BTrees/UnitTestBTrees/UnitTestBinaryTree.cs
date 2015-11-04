@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using BTrees;
 
@@ -236,17 +237,17 @@ namespace UnitTestBalacedTrees
         }
 
         [TestMethod]
-        public void Test_Delete_On_Null_Tree()
+        public void Test_Remove_On_Null_Tree()
         {
             // Arrange
             BinaryTree bt = new BinaryTree();
-            Node node = new Node();
+            Node node = new Node(17);
 
             // Act
-            bool deleted = bt.Delete(node);   // Should find the single node (17 == 17)...
+            bool removed = bt.Remove(node);   // Shouldn't find any node match.
 
             // Assert
-            Assert.IsFalse(deleted);
+            Assert.IsFalse(removed);
         }
 
         [TestMethod]
@@ -255,26 +256,27 @@ namespace UnitTestBalacedTrees
         {
             // Arrange
             BinaryTree bt = new BinaryTree();
-            Node node = new Node();
+            Node node = new Node(17);
 
             bt.Insert(node);
 
             // Act
-            bool deleted = bt.Delete(node);   // Should find the single node (17 == 17)...
+            bool removed = bt.Remove(node);   // Should find the single node (17 == 17)...
 
             // Assert
-            Assert.IsTrue(deleted);
+            Assert.IsTrue(removed);
+            Assert.IsTrue(bt.TreeDepth() == 0);
         }
 
         [TestMethod]
         // This is delete case #2, a delete of a node in the middle of a tree where it is "left-only".
-        public void Test_Delete_On_Node_With_Only_A_Left_Subtree()
+        public void Test_Remove_On_Node_With_Only_A_Left_Subtree()
         {
             // Arrange
             BinaryTree bt = new BinaryTree();
 
             Node n1 = new Node(17);
-            Node n2 = new Node(14);   // This is the one we will delete.
+            Node n2 = new Node(14);   // This is the one we will remove.
             Node n3 = new Node(9);
 
             // This order of insertion should create a left-only subtree.
@@ -283,15 +285,19 @@ namespace UnitTestBalacedTrees
             bt.Insert(n3);
 
             // Act
-            bool deleted = bt.Delete(n2);
+            bool removed = bt.Remove(n2);
 
             // Assert
-            Assert.IsTrue(deleted);
+            Assert.IsTrue(removed);
+            Assert.IsTrue(bt.TreeDepth() == 2);
+            Queue<Node> queue = bt.TreeToQueue();
+            Assert.IsTrue(queue.Dequeue() == n3);
+            Assert.IsTrue(queue.Dequeue() == n1);
         }
 
         [TestMethod]
         // This is another delete case #2, where a delete of a node in the middle of a tree where it is "right-only".
-        public void Test_Delete_On_Node_With_Only_A_Right_Subtree()
+        public void Test_Remove_On_Node_With_Only_A_Right_Subtree()
         {
             // Arrange
             BinaryTree bt = new BinaryTree();
@@ -306,15 +312,16 @@ namespace UnitTestBalacedTrees
             bt.Insert(n3);
 
             // Act
-            bool deleted = bt.Delete(n2);
+            bool removed = bt.Remove(n2);
 
             // Assert
-            Assert.IsTrue(deleted);
+            Assert.IsTrue(removed);
         }
 
         [TestMethod]
         // This is a test for delete case #3, where the delete is for a node with both left and right children.
-        public void Test_Delete_On_Node_With_Left_and_right_Subtrees()
+        // This is a simple case where the children are leaves.
+        public void Test_Remove_On_Node_With_Left_and_right_Leaves()
         {
             // Arrange
             BinaryTree bt = new BinaryTree();
@@ -324,17 +331,118 @@ namespace UnitTestBalacedTrees
             Node n3 = new Node(21);
             Node n4 = new Node(29);
 
-            // This order of insertion should create a right-only subtree.
             bt.Insert(n1);
-            bt.Insert(n2);
+            bt.Insert(n2);  // Node to delete.
             bt.Insert(n3);
             bt.Insert(n4);
 
             // Act
-            bool deleted = bt.Delete(n2);
+            bool removed = bt.Remove(n2);
 
             // Assert
-            Assert.IsTrue(deleted);
+            Assert.IsTrue(removed);
+            Queue<Node> queue = bt.TreeToQueue();  // To validate the remaining tree nodes.
+            Assert.IsTrue(queue.Count == 3);
+            Assert.IsTrue(17 == queue.Dequeue().iValue);
+            Assert.IsTrue(21 == queue.Dequeue().iValue);
+            Assert.IsTrue(29 == queue.Dequeue().iValue);
+        }
+
+        [TestMethod]
+        // This is a test for delete case #3, where the delete is for a node with both left and right children.
+        // This one has a left child that is a tree itself and will force a "ripple" down the tree below the delete.
+        public void Test_Remove_On_Node_With_Left_and_right_Subtrees()
+        {
+            // Arrange
+            BinaryTree bt = new BinaryTree();
+
+            // The test tree looks like:
+            //       11
+            //      /  \
+            //     5    17
+            //    / \  
+            //   2   7 
+            //  / \
+            // 1   4
+            //    /
+            //   3
+            Node[] nArray = new Node[8];
+            nArray[0] = new Node(11);
+            nArray[1] = new Node(5);   // This is the node we will delete below.
+            nArray[2] = new Node(17);
+            nArray[3] = new Node(2);
+            nArray[4] = new Node(7);
+            nArray[5] = new Node(1);
+            nArray[6] = new Node(4);
+            nArray[7] = new Node(3);
+
+            // This order of insertion should create the right tree.
+            for (int i = 0; i < 8; i++)
+            {
+                bt.Insert(nArray[i]);
+            }
+
+            // Act
+            bool removed = bt.Remove(nArray[1]);
+
+            // Assert
+            Assert.IsTrue(removed);
+            Queue<Node> queue = bt.TreeToQueue();  // Get the remaining elements to validate them...
+            Assert.IsTrue(queue.Count == 7);
+            Assert.IsTrue(1 == queue.Dequeue().iValue);
+            Assert.IsTrue(2 == queue.Dequeue().iValue);
+            Assert.IsTrue(3 == queue.Dequeue().iValue);
+            Assert.IsTrue(4 == queue.Dequeue().iValue);
+            Assert.IsTrue(7 == queue.Dequeue().iValue);
+            Assert.IsTrue(11 == queue.Dequeue().iValue);
+            Assert.IsTrue(17 == queue.Dequeue().iValue);
+        }
+
+        public void Test_Remove_On_Root_Node_With_Left_and_right_Subtrees()
+        {
+            // Arrange
+            BinaryTree bt = new BinaryTree();
+
+            // The test tree looks like:
+            //       11
+            //      /  \
+            //     5    17
+            //    / \  
+            //   2   7 
+            //  / \
+            // 1   4
+            //    /
+            //   3
+            Node[] nArray = new Node[8];
+            nArray[0] = new Node(11);   // This is the node we will delete below (root node).
+            nArray[1] = new Node(5);
+            nArray[2] = new Node(17);
+            nArray[3] = new Node(2);
+            nArray[4] = new Node(7);
+            nArray[5] = new Node(1);
+            nArray[6] = new Node(4);
+            nArray[7] = new Node(3);
+
+            // This order of insertion should create a our "complex" tree.
+            for (int i = 0; i < 8; i++)
+            {
+                bt.Insert(nArray[i]);
+            }
+
+            // Act
+            bool removed = bt.Remove(nArray[0]);
+
+            // Assert
+            Assert.IsTrue(removed);
+            Queue<Node> queue = bt.TreeToQueue();  // Get the remaining elements to validate them...
+            Assert.IsTrue(queue.Count == 7);
+            Assert.IsTrue(1 == queue.Dequeue().iValue);
+            Assert.IsTrue(2 == queue.Dequeue().iValue);
+            Assert.IsTrue(3 == queue.Dequeue().iValue);
+            Assert.IsTrue(4 == queue.Dequeue().iValue);
+            Assert.IsTrue(5 == queue.Dequeue().iValue);
+            Assert.IsTrue(7 == queue.Dequeue().iValue);
+            Assert.IsTrue(17 == queue.Dequeue().iValue);
         }
     }
 }

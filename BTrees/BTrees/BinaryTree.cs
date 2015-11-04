@@ -169,9 +169,9 @@ namespace BTrees
                 }
             }
 
-            if (_tree.right != null)
+            if (t.right != null)
             {
-                found = FindNodeAndParent(_tree.right, n, ref parent);
+                found = FindNodeAndParent(t.right, n, ref parent);
                 if (found == true)
                 {
                     return true;
@@ -179,21 +179,6 @@ namespace BTrees
             }
 
             return false;
-        }
-
-        // FindLargestNode() searches a binary tree and returns the node with the largest iValue. This will always
-        // be either the node, or a node in its right subtree...
-        private Node FindLargestNode(Node tree)
-        {
-            Node nLargest = null;
-
-            while (tree != null)
-            {
-                nLargest = tree;
-                tree = tree.right;
-            }
-
-            return nLargest;
         }
 
         // FindNodeyValue() is a pre-order recursive search. In a well balanced tree this is O(log number-of-nodes).
@@ -223,10 +208,10 @@ namespace BTrees
             return FindNodeByValue(_tree, iVal);
         }
 
-        public bool Delete(Node n)
+        public bool Remove(Node nRemove)
         {
             Node parent = null;
-            bool found = FindNodeAndParent(_tree, n, ref parent);
+            bool found = FindNodeAndParent(_tree, nRemove, ref parent);
 
             if (found == false)
             {
@@ -238,13 +223,14 @@ namespace BTrees
             if (parent == null)
             {
                 // Tree is a single node tree.
+                _tree = null;
                 return true;
             }
 
             // Case #1: Node n is a leaf (no children)
-            if ( (n.left == null) && (n.right == null))
+            if ( (nRemove.left == null) && (nRemove.right == null))
             {
-                if (parent.left == n)
+                if (parent.left == nRemove)
                     parent.left = null;
                 else
                     parent.right = null;
@@ -252,35 +238,71 @@ namespace BTrees
             }
             
             // Case #2: Node n has either a left or right child but not both.
-            if ((n.left != null) && (n.right == null))
+            if((nRemove.left != null) && (nRemove.right == null))
             {
-                parent.left = n.left;
+                if (parent.left == nRemove)
+                {
+                    parent.left = nRemove.left;
+                }
+                else
+                {
+                    parent.right = nRemove.left;
+                }
+
                 return true;
             }
 
-            if (n.right != null)
+            if ((nRemove.left == null) && (nRemove.right != null))
             {
-                parent.right = n.right;
+                if (parent.left == nRemove)
+                {
+                    parent.left = nRemove.right;
+                }
+                else
+                {
+                    parent.right = nRemove.right;
+                }
+
                 return true;
             }
 
             // Case #3: The node has both left and right children.
-            // Find the largest value in the left subtree, remove it, and 
-            // substitute it in with the node being deleted.
-            Node nLargest = FindLargestNode(n.left);
-            this.Delete(nLargest);
-            nLargest.right = n.right;
-            nLargest.left = n.left;
-            if (parent.left == n)
+            // Find the largest value in the left subtree, copy its data into the node being "removed" then 
+            // remove that largest node from the tree (note: it won't have a right subtree).
+            Node nLargest = nRemove.left;
+            Node nLargestParent = nRemove;
+            while (nLargest.right != null)
             {
-                parent.left = nLargest;
-            } 
-            else
-            {
-                parent.right = nLargest;
+                nLargestParent = nLargest;
+                nLargest = nLargest.right;
             }
 
+            int tempValue = nLargest.iValue;
+
+            bool removed = Remove(nLargest);
+
+            nRemove.iValue = tempValue;
+
             return true;
+        }
+
+        private void InOrderTreeToQueue(Node t, Queue<Node> queue)
+        {
+            if (t != null)
+            {
+                InOrderTreeToQueue(t.left, queue);
+                queue.Enqueue(t);
+                InOrderTreeToQueue(t.right, queue);
+            }
+        }
+
+        public Queue<Node> TreeToQueue()
+        {
+            Queue<Node> queue = new Queue<Node>();
+
+            InOrderTreeToQueue(_tree, queue);
+
+            return queue;
         }
     }
 }

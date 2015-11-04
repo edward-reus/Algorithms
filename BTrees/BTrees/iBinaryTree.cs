@@ -21,6 +21,8 @@ namespace BTrees
 
         bool Insert(Node node);
 
-        bool Delete(Node node);
+        bool Remove(Node node);
+
+        Queue<Node> TreeToQueue();
     }
 }
