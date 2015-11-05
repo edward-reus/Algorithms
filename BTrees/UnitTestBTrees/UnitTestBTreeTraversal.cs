@@ -24,22 +24,22 @@ namespace UnitTestBTrees
                 Node n = null;
 
                 Node t = new Node();   // Root node (value == 4).
-                t.iValue = 4;
+                t.iKey = 4;
                 t.left = new Node();   // Left child of root (3).
                 n = t.left;
-                n.iValue = 3;
+                n.iKey = 3;
                 n.left = new Node();   // Left child of 3 (is 1).
-                n.left.iValue = 1;
+                n.left.iKey = 1;
                 t.right = new Node();  // Right child of root (9).
                 n = t.right;
-                n.iValue = 9;
+                n.iKey = 9;
                 n.left = new Node();   // Left child of 9 (is 7).
-                n.left.iValue = 7;
+                n.left.iKey = 7;
                 n.right = new Node();  // Right child of 9 (is 11).
-                n.right.iValue = 11;
+                n.right.iKey = 11;
                 n = n.right;
                 n.right = new Node();  // Right child of 11 (is 15).
-                n.right.iValue = 15;
+                n.right.iKey = 15;
 
                 return t;
             }

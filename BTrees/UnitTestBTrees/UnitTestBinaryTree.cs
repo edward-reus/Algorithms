@@ -19,27 +19,35 @@ namespace UnitTestBalacedTrees
             // 1    7   11
             //           \
             //            15
-            bt.Insert(4);
-            bt.Insert(3);
-            bt.Insert(9);
-            bt.Insert(1);
-            bt.Insert(7);
-            bt.Insert(11);
-            bt.Insert(15);
+            int[] iKeys = { 4, 3, 9, 1, 7, 11, 15 };
+            string[] dataStrings = { "Data1", "Data2", "Data3", "Data4", "Data5", "Data6", "Data7" };
+            for (int i=0; i<7; i++)
+            {
+                Data data = new Data(iKeys[i], dataStrings[i]);
+                bt.Insert(iKeys[i], data);
+            }
         }
 
         private void BuildLeftUnbalancedTree(BinaryTree bt)
         {
-            bt.Insert(4);
-            bt.Insert(2);
-            bt.Insert(1);
+            int[] iKeys = { 4, 2, 1 };
+            string[] dataStrings = { "Data1", "Data2", "Data3"};
+            for (int i = 0; i < 3; i++)
+            {
+                Data data = new Data(iKeys[i], dataStrings[i]);
+                bt.Insert(iKeys[i], data);
+            }
         }
 
         private void BuildRightUnbalancedTree(BinaryTree bt)
         {
-            bt.Insert(4);
-            bt.Insert(8);
-            bt.Insert(16);
+            int[] iKeys = { 4, 8, 16 };
+            string[] dataStrings = { "Data1", "Data2", "Data3" };
+            for (int i = 0; i < 7; i++)
+            {
+                Data data = new Data(iKeys[i], dataStrings[i]);
+                bt.Insert(iKeys[i], data);
+            }
         }
 
         [TestMethod]
@@ -60,7 +68,8 @@ namespace UnitTestBalacedTrees
         {
             // Arrange
             BinaryTree b = new BinaryTree();
-            b.Insert(1);
+            Data data = new Data();
+            b.Insert(1, data);
 
             // Act
             int depth = b.TreeDepth();
@@ -156,7 +165,8 @@ namespace UnitTestBalacedTrees
         {
             // Arrange
             BinaryTree bt = new BinaryTree();
-            bt.Insert(5);
+            Data data = new Data();
+            bt.Insert(5, data);
 
             // Act
             bool balanced = bt.TreeIsBalanced2();
@@ -172,24 +182,25 @@ namespace UnitTestBalacedTrees
             BinaryTree bt = new BinaryTree();
 
             // Act
-            Node n = bt.FindNode(7);   // Should be no node to find...
+            Data data = bt.FindNode(7);   // Should be no node to find...
 
             // Assert
-            Assert.IsNull(n);
+            Assert.IsNull(data);
         }
 
         [TestMethod]
-        public void Test_Find_Fails_For_Single_Node_Tree()
+        public void Test_Find_On_Non_Existant_Key_Fails_For_Single_Node_Tree()
         {
             // Arrange
             BinaryTree bt = new BinaryTree();
-            bt.Insert(17);
+            Data data = new Data();
+            bt.Insert(17, data);
 
             // Act
-            Node n = bt.FindNode(7);   // Should be no node to find (7 != 17)...
+            data = bt.FindNode(23);   // Should be no node to find (23 != 17)...
 
             // Assert
-            Assert.IsNull(n);
+            Assert.IsNull(data);
         }
 
         [TestMethod]
@@ -197,28 +208,30 @@ namespace UnitTestBalacedTrees
         {
             // Arrange
             BinaryTree bt = new BinaryTree();
-            bt.Insert(17);
+            Data data = new Data();
+            bt.Insert(17, data);
 
             // Act
-            Node n = bt.FindNode(17);   // Should find the single node (17 == 17)...
+            data = bt.FindNode(17);   // Should find the single node (17 == 17)...
 
             // Assert
-            Assert.IsNotNull(n);
+            Assert.IsNotNull(data);
         }
 
         [TestMethod]
-        public void Test_Find_Succeeds_When_Walking_Depth_Equals_2_Tree()
+        public void Test_Find_Succeeds_When_Searching_A_Depth_Equals_2_Tree()
         {
             // Arrange
             BinaryTree bt = new BinaryTree();
             BuildLeftUnbalancedTree(bt);
-            bt.Insert(17);   // Tree (should have a depth of two, new leaf node.
+            Data data = new Data(17, "Data4");
+            bt.Insert(17,data);   // Tree (should have a depth of two, new leaf node.
 
             // Act
-            Node n = bt.FindNode(17);   // Should find the single node (17 == 17)...
+            data = bt.FindNode(17);   // Should find the single node (17 == 17)...
 
             // Assert
-            Assert.IsNotNull(n);
+            Assert.IsNotNull(data);
         }
 
         [TestMethod]
@@ -230,10 +243,10 @@ namespace UnitTestBalacedTrees
             int iVal = 9;  // Internal Node in tree...
 
             // Act
-            Node n = bt.FindNode(iVal);   // Should find the single node (17 == 17)...
+            Data data = bt.FindNode(iVal);   // Should find the single node (17 == 17)...
 
             // Assert
-            Assert.IsNotNull(n);
+            Assert.IsNotNull(data);
         }
 
         [TestMethod]
@@ -241,10 +254,9 @@ namespace UnitTestBalacedTrees
         {
             // Arrange
             BinaryTree bt = new BinaryTree();
-            Node node = new Node(17);
 
             // Act
-            bool removed = bt.Remove(node);   // Shouldn't find any node match.
+            bool removed = bt.Remove(23);   // Shouldn't find any node match.
 
             // Assert
             Assert.IsFalse(removed);
@@ -256,12 +268,12 @@ namespace UnitTestBalacedTrees
         {
             // Arrange
             BinaryTree bt = new BinaryTree();
-            Node node = new Node(17);
+            Data data = new Data(17, "Data17");
 
-            bt.Insert(node);
+            bt.Insert(17, data);
 
             // Act
-            bool removed = bt.Remove(node);   // Should find the single node (17 == 17)...
+            bool removed = bt.Remove(17);   // Should find the single node (17 == 17)...
 
             // Assert
             Assert.IsTrue(removed);
@@ -285,7 +297,7 @@ namespace UnitTestBalacedTrees
             bt.Insert(n3);
 
             // Act
-            bool removed = bt.Remove(n2);
+            bool removed = bt.Remove(14);
 
             // Assert
             Assert.IsTrue(removed);
@@ -312,10 +324,11 @@ namespace UnitTestBalacedTrees
             bt.Insert(n3);
 
             // Act
-            bool removed = bt.Remove(n2);
+            bool removed = bt.Remove(23);
 
             // Assert
             Assert.IsTrue(removed);
+            Assert.IsTrue(bt.TreeDepth() == 2);
         }
 
         [TestMethod]
@@ -337,15 +350,15 @@ namespace UnitTestBalacedTrees
             bt.Insert(n4);
 
             // Act
-            bool removed = bt.Remove(n2);
+            bool removed = bt.Remove(23);
 
             // Assert
             Assert.IsTrue(removed);
             Queue<Node> queue = bt.TreeToQueue();  // To validate the remaining tree nodes.
             Assert.IsTrue(queue.Count == 3);
-            Assert.IsTrue(17 == queue.Dequeue().iValue);
-            Assert.IsTrue(21 == queue.Dequeue().iValue);
-            Assert.IsTrue(29 == queue.Dequeue().iValue);
+            Assert.IsTrue(17 == queue.Dequeue().iKey);
+            Assert.IsTrue(21 == queue.Dequeue().iKey);
+            Assert.IsTrue(29 == queue.Dequeue().iKey);
         }
 
         [TestMethod]
@@ -383,19 +396,19 @@ namespace UnitTestBalacedTrees
             }
 
             // Act
-            bool removed = bt.Remove(nArray[1]);
+            bool removed = bt.Remove(5);
 
             // Assert
             Assert.IsTrue(removed);
             Queue<Node> queue = bt.TreeToQueue();  // Get the remaining elements to validate them...
             Assert.IsTrue(queue.Count == 7);
-            Assert.IsTrue(1 == queue.Dequeue().iValue);
-            Assert.IsTrue(2 == queue.Dequeue().iValue);
-            Assert.IsTrue(3 == queue.Dequeue().iValue);
-            Assert.IsTrue(4 == queue.Dequeue().iValue);
-            Assert.IsTrue(7 == queue.Dequeue().iValue);
-            Assert.IsTrue(11 == queue.Dequeue().iValue);
-            Assert.IsTrue(17 == queue.Dequeue().iValue);
+            Assert.IsTrue(1 == queue.Dequeue().iKey);
+            Assert.IsTrue(2 == queue.Dequeue().iKey);
+            Assert.IsTrue(3 == queue.Dequeue().iKey);
+            Assert.IsTrue(4 == queue.Dequeue().iKey);
+            Assert.IsTrue(7 == queue.Dequeue().iKey);
+            Assert.IsTrue(11 == queue.Dequeue().iKey);
+            Assert.IsTrue(17 == queue.Dequeue().iKey);
         }
 
         public void Test_Remove_On_Root_Node_With_Left_and_right_Subtrees()
@@ -430,19 +443,19 @@ namespace UnitTestBalacedTrees
             }
 
             // Act
-            bool removed = bt.Remove(nArray[0]);
+            bool removed = bt.Remove(11);
 
             // Assert
             Assert.IsTrue(removed);
             Queue<Node> queue = bt.TreeToQueue();  // Get the remaining elements to validate them...
             Assert.IsTrue(queue.Count == 7);
-            Assert.IsTrue(1 == queue.Dequeue().iValue);
-            Assert.IsTrue(2 == queue.Dequeue().iValue);
-            Assert.IsTrue(3 == queue.Dequeue().iValue);
-            Assert.IsTrue(4 == queue.Dequeue().iValue);
-            Assert.IsTrue(5 == queue.Dequeue().iValue);
-            Assert.IsTrue(7 == queue.Dequeue().iValue);
-            Assert.IsTrue(17 == queue.Dequeue().iValue);
+            Assert.IsTrue(1 == queue.Dequeue().iKey);
+            Assert.IsTrue(2 == queue.Dequeue().iKey);
+            Assert.IsTrue(3 == queue.Dequeue().iKey);
+            Assert.IsTrue(4 == queue.Dequeue().iKey);
+            Assert.IsTrue(5 == queue.Dequeue().iKey);
+            Assert.IsTrue(7 == queue.Dequeue().iKey);
+            Assert.IsTrue(17 == queue.Dequeue().iKey);
         }
     }
 }

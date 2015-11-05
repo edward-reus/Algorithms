@@ -88,9 +88,14 @@ namespace BTrees
             return false;
         }
 
-        public bool Insert(int iValue)
+        public bool Insert(int iKey, Data data)
         {
-            Node n = new Node(iValue);
+            if (data == null)
+            {
+                return false;
+            }
+
+            Node n = new Node(iKey,data);
 
             return Insert(n);
         }
@@ -110,12 +115,12 @@ namespace BTrees
             while (true)
             {
                 parent = current;
-                if (current.iValue == n.iValue)
+                if (current.iKey == n.iKey)
                 {
                     return true;  // Element (node) is already in tree.
                 }
 
-                if (current.iValue > n.iValue)
+                if (current.iKey > n.iKey)
                 {
                     current = current.left;
                     if (current == null)
@@ -140,28 +145,28 @@ namespace BTrees
             return inserted;
         }
 
-        public bool FindNodeAndParent(Node t, Node n, ref Node parent)
+        public bool FindNodeAndParent(Node tree, Node n, ref Node parent)
         {
-            if (t == null)    // Check for empty tree.
+            if (tree == null)    // Check for empty tree.
             {
                 parent = null;
                 return false;
             }
 
-            if (t == n)
+            if (tree == n)
             {
                 return true;
             }
 
-            parent = t;
+            parent = tree;
 
             bool found;
 
-            if (t.iValue > n.iValue)
+            if (tree.iKey > n.iKey)
             {
-                if (t.left != null)
+                if (tree.left != null)
                 {
-                    found = FindNodeAndParent(t.left, n, ref parent);
+                    found = FindNodeAndParent(tree.left, n, ref parent);
                     if (found == true)
                     {
                         return true;
@@ -169,9 +174,9 @@ namespace BTrees
                 }
             }
 
-            if (t.right != null)
+            if (tree.right != null)
             {
-                found = FindNodeAndParent(t.right, n, ref parent);
+                found = FindNodeAndParent(tree.right, n, ref parent);
                 if (found == true)
                 {
                     return true;
@@ -182,34 +187,41 @@ namespace BTrees
         }
 
         // FindNodeyValue() is a pre-order recursive search. In a well balanced tree this is O(log number-of-nodes).
-        private Node FindNodeByValue(Node t, int iVal)
+        private Node FindNodeByValue(Node tree, int iKey)
         {
-            if (t == null)
+            if (tree == null)
             {
                 return null;
             }
 
-            if (iVal == t.iValue)  // Check for match.
+            if (iKey == tree.iKey)  // Check for match.
             {
-                return t;
+                return tree;
             }
 
-            if (iVal < t.iValue)   // Check to see if we need to go look left.
+            if (iKey < tree.iKey)   // Check to see if we need to go look left.
             {
-                return FindNodeByValue(t.left, iVal);
+                return FindNodeByValue(tree.left, iKey);
             }
 
             // Only case left is to check the right branch of the tree.
-            return FindNodeByValue(t.right, iVal);
+            return FindNodeByValue(tree.right, iKey);
         }
 
-        public Node FindNode(int iVal)
+        public Data FindNode(int iVal)
         {
-            return FindNodeByValue(_tree, iVal);
+            Node node = FindNodeByValue(_tree, iVal);
+            if (node != null)
+            {
+                return node.data;
+            }
+
+            return null;
         }
 
-        public bool Remove(Node nRemove)
+        public bool Remove(int iKey)
         {
+            Node nRemove = FindNodeByValue(_tree, iKey);  // XXX: Dorky code. Combine this and next method call.
             Node parent = null;
             bool found = FindNodeAndParent(_tree, nRemove, ref parent);
 
@@ -277,11 +289,11 @@ namespace BTrees
                 nLargest = nLargest.right;
             }
 
-            int tempValue = nLargest.iValue;
+            int tempValue = nLargest.iKey;
 
-            bool removed = Remove(nLargest);
+            bool removed = Remove(nLargest.iKey);
 
-            nRemove.iValue = tempValue;
+            nRemove.iKey = tempValue;
 
             return true;
         }

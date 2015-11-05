@@ -43,6 +43,7 @@
     <Compile Include="BTreeTraversal.cs" />
     <Compile Include="BTreeTraversalIterative.cs" />
     <Compile Include="BinaryTree.cs" />
+    <Compile Include="Data.cs" />
     <Compile Include="iBinaryTree.cs" />
     <Compile Include="iVisit.cs" />
     <Compile Include="Visit.cs" />

@@ -34,8 +34,8 @@ namespace UnitTestBTrees
             Queue<int> queue = new Queue<int>();
             Visit v = new Visit();  // Class being tested...
 
-            node1.iValue = 1;
-            node2.iValue = 2;
+            node1.iKey = 1;
+            node2.iKey = 2;
 
             // Act
             v.VisitNode(node1, queue);

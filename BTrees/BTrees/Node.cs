@@ -11,15 +11,24 @@ namespace BTrees
     {
         public Node()
         {
-            iValue = 0;
+            iKey = 0;
+            data = null;
         }
 
-        public Node(int iNew)
+        public Node(int iNewKey)
         {
-            iValue = iNew;
+            iKey = iNewKey;
+            data = null;
         }
 
-        public int iValue;
+        public Node(int iNewKey, Data newData)
+        {
+            iKey = iNewKey;
+            data = newData;
+        }
+
+        public int  iKey;
+        public Data data;
         public Node left;
         public Node right;
     }

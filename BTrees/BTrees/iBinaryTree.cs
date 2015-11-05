@@ -15,13 +15,13 @@ namespace BTrees
 
         bool TreeIsBalanced2();
 
-        Node FindNode(int iValue);
+        Data FindNode(int iKey);
 
-        bool Insert(int iValue);
+        bool Insert(int iValue, Data data);
 
         bool Insert(Node node);
 
-        bool Remove(Node node);
+        bool Remove(int iKey);
 
         Queue<Node> TreeToQueue();
     }

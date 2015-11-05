@@ -15,7 +15,7 @@ namespace BTrees
                 throw new ArgumentNullException();
             }
 
-            queue.Enqueue(n.iValue);
+            queue.Enqueue(n.iKey);
             
             return;
         }
